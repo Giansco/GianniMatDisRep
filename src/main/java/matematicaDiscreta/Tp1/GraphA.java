@@ -7,14 +7,14 @@ import java.util.List;
  * Created by Gianni on 8/27/2017.
  */
 public class GraphA implements Graph {
-    private Object[] V;
+    private List<Object> V;
     private boolean[][] A;
     private int n;
     private int alfa;
     private int capacity;
 
     GraphA() {
-        V = new Object[10];
+        V = new ArrayList<>(10);
         A = new boolean[10][10];
         capacity=10;
         n = 0;
@@ -22,7 +22,7 @@ public class GraphA implements Graph {
     }
     GraphA(int capacidad) {
         this.capacity=capacidad;
-        V = new Object[capacity];
+        V = new ArrayList<>(10);
         A = new boolean[capacity][capacity];
         n = 0;
         alfa = 0;
@@ -31,7 +31,7 @@ public class GraphA implements Graph {
     @Override
     public void agregarVertice(Object x) {
         if (n<capacity){
-            V[n] = x;
+            V.add(x);
             n++;
         }else {
             grow();
@@ -40,15 +40,15 @@ public class GraphA implements Graph {
     }
 
     private void grow(){
-        Object[] newArray = new Object[capacity*2];
-        System.arraycopy(V,0,newArray,0,capacity);
+        //Object[] newArray = new Object[capacity*2];
+        //System.arraycopy(V,0,newArray,0,capacity);
         boolean[][] new2DArray = new boolean[capacity*2][capacity*2];
         for (int i = 0; i < capacity; i++) {
             for (int j = 0; j < capacity; j++) {
                 new2DArray[i][j] = A[i][j];
             }
         }
-        V=newArray;
+        //V=newArray;
         A=new2DArray;
         capacity=capacity*2;
     }
@@ -67,7 +67,12 @@ public class GraphA implements Graph {
 
     @Override
     public void eliminarVertice(int v) {
-        //implement
+        V.remove(v);
+        final List<Integer> listaAdy = getListaAdy(v);
+        for (int i = 0; i < listaAdy.size(); i++) {
+            eliminarArista(v,listaAdy.get(i));
+        }
+        n--;
     }
 
     @Override
@@ -87,7 +92,7 @@ public class GraphA implements Graph {
 
     @Override
     public Object verVertice(int v) {
-        return V[v];
+        return V.get(v);
     }
 
     @Override
